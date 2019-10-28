@@ -68,3 +68,20 @@ server.post('/api/users', (req, res) => {
         .json({ error: "There was an error while saving the user to the database" })
     })
 })
+
+//delete req
+server.delete('/api/users/:id', (req, res) => {
+    const id = req.params.id
+    (`!users/${id}`)
+    ? res
+    .status(404)
+    .json({ message: "The user with the specified ID does not exist." })
+    :db.
+    remove(id)
+    .then(users => {
+        res.status(200).json(users)
+    })
+    .catch(() => {
+        res.status(500).json({ error: 'The user information could not be removed.' });
+      });
+})
