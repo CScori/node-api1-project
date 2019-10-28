@@ -31,25 +31,6 @@ server.get('/api/users', (req, res) => {
         res.status(500).json({ error: 'failed to get users from db' });
       });
 })
-//post new user
-server.post('/api/users', (req, res) => {
-    // define data to post
-    const newUser = req.body
-    console.log('newUser to post', newUser)
-    //run promise post 
-    db.insert(newUser)
-    .then(users => {
-        res.status(201).json(users)
-        res.status(400).json()
-    })
-    // may possibly need to edit 400 if body info is not right
-    //also considering multiple fn for diff cases not sure
-    .catch(err => {
-        console.log('error', err);
-        res.status(500).json({ error: 'failed to add new users to db' });
-      });
-})
-
 //get specific user by id
 server.get('/api/users/:id', (req, res) => {
     // define single user id from db
@@ -62,6 +43,27 @@ server.get('/api/users/:id', (req, res) => {
     })
     .catch(err => {
         console.log('error', err);
-        res.status(500).json({ error: 'failed to get single user from db' });
+        res.status(404).json({error: "The user with the specified ID does not exist"})
+        res.status(500).json({ error: 'The user information could not be retrieved.' });
       });
+})
+//post new user
+server.post('/api/users', (req, res) => {
+    // define data to post
+    const {name, bio} = req.body
+  
+    (! name || !bio)
+    ? res
+    .status(400)
+    .json({ errorMessage: "Please provide name and bio for the user." })
+    : db
+    .insert(req.body)
+    .then(user => {
+        res.status(201).json(user)
+    })
+    .catch(() => {
+        res
+        .status(500)
+        .json({ error: "There was an error while saving the user to the database" })
+    })
 })
