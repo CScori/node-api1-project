@@ -21,7 +21,7 @@ server.get('/', (req, res) => {
 const db = require('./data/db')
 
 //get to api users
-server.get('/users', (req, res) => {
+server.get('/api/users', (req, res) => {
     db.find() //woeks like axios in fe
     .then(users => {
         res.status(200).json(users)
@@ -29,5 +29,22 @@ server.get('/users', (req, res) => {
     .catch(err => {
         console.log('error', err);
         res.status(500).json({ error: 'failed to get users from db' });
+      });
+})
+//post new user
+server.post('/api/users', (req, res) => {
+    // define data to post
+    const newUser = req.body
+    console.log('newUser to post', newUser)
+    //run promise post 
+    db.insert(newUser)
+    .then(users => {
+        res.status(201).json(users)
+        res.status(400).json()
+    })
+    // may possibly need to edit 400 if body info is not right
+    .catch(err => {
+        console.log('error', err);
+        res.status(500).json({ error: 'failed to add new users to db' });
       });
 })
