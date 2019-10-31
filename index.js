@@ -7,8 +7,8 @@ const server = express()
 
 
 // define port to run on 
-const port = 5000
-server.listen(port, () => console.log('\n RUNNING ON 5000 SERVER \n'))
+const port = process.env.PORT || 5000
+server.listen(port, () => console.log(`\n RUNNING ON ${port} SERVER \n`))
 
 // run server listen upon npm run server
 server.use(express.json())
